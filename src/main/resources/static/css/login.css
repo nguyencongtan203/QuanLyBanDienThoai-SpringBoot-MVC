@@ -1,0 +1,125 @@
+.gradient-custom-2 {
+    background: #780206;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #061161, #780206);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #061161, #780206);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+@media (min-width: 768px) {
+    .gradient-form {
+        height: 100vh !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .gradient-custom-2 {
+        border-top-right-radius: .3rem;
+        border-bottom-right-radius: .3rem;
+    }
+}
+
+/* Thêm styles mới */
+.card.rounded-3.text-black {
+    overflow: hidden;
+}
+
+.form-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.forms-wrapper {
+    display: flex;
+    width: 200%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.login,
+.register {
+    width: 100%;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.register {
+    opacity: 0;
+}
+
+/* Animation classes */
+.slide-left {
+    transform: translateX(-50%);
+}
+
+.slide-right {
+    transform: translateX(0%);
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+input[type="tel"]::-webkit-inner-spin-button,
+input[type="tel"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="tel"] {
+    -moz-appearance: textfield;
+}
+
+.register-now,
+.login-now {
+    background: transparent !important;
+    position: relative;
+    background-clip: padding-box;
+    color: transparent;
+    transition: all 0.3s ease;
+    border-color: linear-gradient(to right, #061161, #780206);
+    border-color: -webkit-linear-gradient(to right, #061161, #780206);
+    border-color: #780206;
+}
+
+.register-now:hover,
+.login-now:hover {
+    border-color: linear-gradient(to right, #061161, #780206);
+    border-color: #780206;
+    border-color: linear-gradient(to right, #061161, #780206);
+}
+
+.register-now span,
+.login-now span {
+    background: linear-gradient(to right, #061161, #780206);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.divider-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 20px 0;
+    padding: 0 15px;
+}
+
+.divider-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.divider-text {
+    color: #6c757d;
+    padding: 0 15px;
+    font-size: 0.9rem;
+    background: #fff;
+}

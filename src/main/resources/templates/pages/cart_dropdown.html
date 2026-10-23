@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<div class="header-ctn">
+    <div class="dropdown" th:fragment="cartDropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+            <i class="fa fa-shopping-cart"></i>
+            <span>Your Cart</span>
+            <!-- Hiển thị số lượng sản phẩm trong giỏ hàng -->
+            <div class="qty" th:text="${chitietgiohang != null ? chitietgiohang.size() : 0}">
+            </div>
+        </a>
+        <div class="cart-dropdown">
+            <div class="cart-list">
+                <div th:if="${chitietgiohang != null and !chitietgiohang.isEmpty()}">
+                    <div class="product-widget" th:each="item : ${chitietgiohang}">
+                        <div class="product-img">
+                            <img th:src="@{/imgs/} + ${item.sanPham.hinhanh}" alt="Ảnh sản phẩm">
+                        </div>
+                        <div class="product-body">
+                            <h3 class="product-name">
+                                <a th:href="@{'/product/' + ${item.sanPham.masp}}" th:text="${item.sanPham.tensp}"></a>
+                            </h3>
+                            <h4 class="product-price">
+                                <span class="qty" th:text="${item.soluong} + 'x'"></span>
+                                <span th:text="${#numbers.formatDecimal(item.dongia, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                            </h4>
+                        </div>
+                        <form class="remove-form" style="display: inline;">
+                            <input type="hidden" name="masp" th:value="${item.sanPham.masp}" />
+                            <button type="submit" class="delete"><i class="fa fa-close"></i></button>
+                        </form>
+                    </div>
+                </div>
+                <p th:if="${chitietgiohang == null or chitietgiohang.isEmpty()}"> Giỏ hàng của bạn không
+                    có sản phẩm nào.</p>
+            </div>
+            <div class="cart-summary">
+                <small th:text="${chitietgiohang != null ? chitietgiohang.size() : 0} + ' sản phẩm'"></small>
+                <h5 th:text="'Tổng cộng: ' + ${#numbers.formatDecimal(subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'"></h5>
+            </div>
+            <div class="cart-btns">
+                <a href="/viewcart">Xem giỏ hàng</a>
+                <a href="/checkout">Thanh toán <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>

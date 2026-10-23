@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>Electro - HTML Ecommerce Template</title>
+
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" />
+
+    <!-- Slick -->
+    <link type="text/css" rel="stylesheet" href="/css/slick.css" />
+    <link type="text/css" rel="stylesheet" href="/css/slick-theme.css" />
+
+    <!-- nouislider -->
+    <link type="text/css" rel="stylesheet" href="/css/nouislider.min.css" />
+
+    <!-- Thay thế link CSS cũ bằng CDN của Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Custom stlylesheet -->
+    <link type="text/css" rel="stylesheet" href="/css/main.css" />
+
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+
+</head>
+
+<body>
+<!-- HEADER -->
+<header>
+    <!-- TOP HEADER -->
+    <div id="top-header">
+        <div class="container">
+            <ul class="header-links pull-left">
+                <li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>
+                <li><a href="#"><i class="fa fa-envelope-o"></i> email@email.com</a></li>
+                <li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
+            </ul>
+
+            <!-- Hiển thị theo điều kiện đăng nhập -->
+            <th:block th:if="${session.name == null}">
+                <ul class="header-links pull-right">
+                    <li>
+                        <a href="/login">
+                            <i class="fa fa-user-o"></i>
+                            <span>Đăng Nhập</span>
+                        </a>
+                    </li>
+                </ul>
+            </th:block>
+
+            <th:block th:if="${session.name != null}">
+                <ul style="display: flex; justify-content: center; align-items: center;"
+                    class="header-links pull-right">
+                    <li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            <img th:src="${session.picture != null ? session.picture : '/imgs/account-logo.png'}"
+                                 class="img-circle user-avatar"
+                                 th:alt="${session.name != null ? session.name : 'Avatar'}" height="22">
+                            <span th:text="${session.name}" class="user-name"></span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu custom-dropdown-menu">
+                            <li><a href="#"><i class="fa fa-user"></i> My Profile</a></li>
+                            <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
+                            <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </th:block>
+        </div>
+    </div>
+    <!-- /TOP HEADER -->
+
+    <!-- MAIN HEADER -->
+    <div id="header" class="gradient-custom-2">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <!-- LOGO -->
+                <div class="col-md-3">
+                    <div class="header-logo">
+                        <a th:href="@{/home}" class="logo">
+                            <img src="./imgs/logo.png" alt="" style="width: 75px;">
+                        </a>
+                    </div>
+                </div>
+                <!-- /LOGO -->
+
+                <!-- SEARCH BAR -->
+                <div class="col-md-6">
+                    <div class="header-search">
+                        <form>
+                            <select class="input-select" name="hang" id="cate-brands">
+                                <option value="">Danh Mục</option>
+                                <option th:each="hang : ${hangList}" th:value="${hang.mahang}"
+                                        th:text="${hang.tenhang}" th:id="'brand-' + ${hang.mahang}">
+                                </option>
+                            </select>
+                            <input class="input search-product" placeholder="Tìm kiếm">
+                            <button class="search-btn fa fa-search search-product-btn"></button>
+                        </form>
+                    </div>
+                </div>
+                <!-- /SEARCH BAR -->
+
+                <!-- ACCOUNT -->
+                <div class="col-md-3 clearfix">
+                    <div class="header-ctn">
+                        <!-- Cart -->
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span>Giỏ hàng</span>
+                                <!-- Hiển thị số lượng sản phẩm trong giỏ hàng -->
+                                <div class="qty" th:text="${chitietgiohang != null ? chitietgiohang.size() : 0}">
+                                </div>
+                            </a>
+                            <div class="cart-dropdown">
+                                <div class="cart-list">
+                                    <!-- Nếu có sản phẩm trong giỏ hàng -->
+                                    <div th:if="${chitietgiohang != null and !chitietgiohang.isEmpty()}">
+                                        <div class="product-widget" th:each="item : ${chitietgiohang}">
+                                            <div class="product-img">
+                                                <img th:src="@{/imgs/} + ${item.sanPham.hinhanh}"
+                                                     alt="Ảnh sản phẩm">
+                                            </div>
+                                            <div class="product-body">
+                                                <h3 class="product-name">
+                                                    <a th:href="@{'/product/' + ${item.sanPham.masp}}"
+                                                       th:text="${item.sanPham.tensp}">Tên sản phẩm</a>
+                                                </h3>
+                                                <h4 class="product-price">
+                                                    <span class="qty" th:text="${item.soluong} + 'x'"></span>
+                                                    <span
+                                                            th:text="${#numbers.formatDecimal(item.dongia, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                                                </h4>
+                                            </div>
+                                            <form action="/remove" method="post" class="remove-form"
+                                                  style="display: inline;">
+                                                <input type="hidden" name="masp" th:value="${item.sanPham.masp}" />
+                                                <button type="submit" class="delete"><i
+                                                        class="fa fa-close"></i></button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <!-- Nếu giỏ hàng không có sản phẩm -->
+                                    <p th:if="${chitietgiohang == null or chitietgiohang.isEmpty()}">Giỏ hàng của
+                                        bạn không có sản phẩm nào.</p>
+                                </div>
+                                <div class="cart-summary">
+                                    <small
+                                            th:text="${chitietgiohang != null ? chitietgiohang.size() : 0} + ' sản phẩm'"></small>
+                                    <h5
+                                            th:text="'Tổng cộng: ' + ${#numbers.formatDecimal(subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                    </h5>
+                                </div>
+                                <div class="cart-btns">
+                                    <a href="/order">Xem đơn hàng</a>
+                                    <a href="/checkout">Thanh toán <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Cart -->
+
+                        <!-- Menu Toogle -->
+                        <div class="menu-toggle">
+                            <a href="#">
+                                <i class="fa fa-bars"></i>
+                                <span>Menu</span>
+                            </a>
+                        </div>
+                        <!-- /Menu Toogle -->
+                    </div>
+                </div>
+                <!-- /ACCOUNT -->
+            </div>
+            <!-- row -->
+        </div>
+        <!-- container -->
+    </div>
+    <!-- /MAIN HEADER -->
+</header>
+<!-- /HEADER -->
+
+<!-- NAVIGATION -->
+<nav id="navigation">
+    <!-- container -->
+    <div class="container">
+        <!-- responsive-nav -->
+        <div id="responsive-nav">
+            <!-- NAV -->
+            <ul class="main-nav nav navbar-nav">
+                <li class="active"><a th:href="@{/home}">Trang Chủ</a></li>
+                <li><a th:href="@{/home}">Khuyến Mãi</a></li>
+                <li><a th:href="@{/store}">Điện Thoại</a></li>
+            </ul>
+            <!-- /NAV -->
+        </div>
+        <!-- /responsive-nav -->
+    </div>
+    <!-- /container -->
+</nav>
+<!-- /NAVIGATION -->
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb" class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb-tree">
+                    <li><a th:href="@{/home}">Trang Chủ</a></li>
+                    <li><a th:href="@{/store}">Sản Phẩm</a></li>
+                    <li class="active" th:text="${sanpham.tensp}">Tên sản phẩm</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /BREADCRUMB -->
+
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- Product main img -->
+            <div class="col-md-5 col-md-push-0">
+                <div id="product-main-img">
+                    <img th:src="@{'/imgs/' + ${sanpham.hinhanh}}" alt="">
+                </div>
+            </div>
+            <!-- /Product main img -->
+
+            <!-- Product details -->
+            <div class="col-md-5">
+                <div class="product-details">
+                    <h2 class="product-name" th:text="${sanpham.tensp}">XIAOMI REDMI 13X</h2>
+
+                    <!-- Rating section -->
+                    <div class="product-rating-container">
+                        <div class="product-rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-o"></i>
+                            <span class="review-count">10 Review(s)</span>
+                        </div>
+                        <a class="review-link" href="#">Add your review</a>
+                    </div>
+
+                    <!-- Price section -->
+                    <div class="price-container">
+                        <div class="current-price">
+                            <span class="formatted-price" th:data-price="${sanpham.gia}">3.990.000 đ</span>
+                        </div>
+                        <div class="old-price">
+                            <del class="formatted-price" th:data-price="${sanpham.gia*1.3}">5.187.000 đ</del>
+                            <span class="discount-badge">-23%</span>
+                        </div>
+                    </div>
+
+                    <form th:action="@{/add-to-cart}" method="post" class="product-actions">
+                        <input type="hidden" name="productId" th:value="${sanpham.masp}" />
+
+                        <!-- Color selection (giữ nguyên UI bạn có) -->
+                        <!--                        <div class="product-options">-->
+                        <!--                            <label class="option-label">-->
+                        <!--                                <span class="option-name">Color</span>-->
+                        <!--                                <select name="color" class="input-select custom-select">-->
+                        <!--                                    <option th:each="color : ${colors}"-->
+                        <!--                                            th:value="${color.mamau}"-->
+                        <!--                                            th:text="${color.giatri}">-->
+                        <!--                                    </option>-->
+                        <!--                                </select>-->
+                        <!--                            </label>-->
+                        <!--                        </div>-->
+
+                        <!-- Quantity selector (giữ nguyên UI bạn có) -->
+                        <div class="quantity-section">
+                            <label class="quantity-label">Số Lượng</label>
+                            <div class="quantity-controls">
+                                <button type="button" class="qty-btn minus-btn">-</button>
+                                <input type="number" name="quantity" class="quantity-input" value="1" min="1"
+                                       max="99" />
+                                <button type="button" class="qty-btn plus-btn">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Nút submit dùng same CSS bạn đang dùng -->
+                        <button type="submit" class="add-to-cart-btn">
+                            <i class="fa fa-shopping-cart"></i>
+                            <span>Thêm vào giỏ hàng</span>
+                        </button>
+                    </form>
+
+                    <!-- Social sharing -->
+                    <div class="social-share">
+                        <span class="share-label">Chia sẻ:</span>
+                        <div class="social-buttons">
+                            <a href="#" class="social-btn facebook"><i class="fa fa-facebook"></i></a>
+                            <a href="#" class="social-btn twitter"><i class="fa fa-twitter"></i></a>
+                            <a href="#" class="social-btn google"><i class="fa fa-google-plus"></i></a>
+                            <a href="#" class="social-btn email"><i class="fa fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Product details -->
+
+            <!-- Product tab -->
+            <div class="col-md-12">
+                <div id="product-tab">
+                    <!-- product tab nav -->
+                    <ul class="tab-nav">
+                        <li class="active"><a data-toggle="tab" href="#tab1">Mô tả</a></li>
+                        <li><a data-toggle="tab" href="#tab2">Chi tiết cấu hình</a></li>
+                    </ul>
+                    <!-- /product tab nav -->
+
+                    <!-- product tab content -->
+                    <div class="tab-content">
+                        <!-- tab1  -->
+                        <div id="tab1" class="tab-pane fade in active">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                                        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /tab1  -->
+
+                        <!-- tab2  -->
+                        <div id="tab2" class="tab-pane fade in">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>Chi tiết cấu hình</h4>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Tên Cấu Hình</th>
+                                            <th>Giá Trị</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="entry : ${groupedData}">
+                                            <td th:text="${entry.key}">Tên Cấu Hình</td>
+                                            <td>
+                                                <ul>
+                                                    <li th:each="chitiet : ${entry.value}"
+                                                        th:text="${chitiet.giatri}"></li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /tab2  -->
+                    </div>
+                    <!-- /product tab content  -->
+                </div>
+            </div>
+            <!-- /product tab -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+
+<!-- NEWSLETTER -->
+<div id="newsletter" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="newsletter">
+                    <p>Sign Up for the <strong>NEWSLETTER</strong></p>
+                    <form>
+                        <input class="input" type="email" placeholder="Enter Your Email">
+                        <button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
+                    </form>
+                    <ul class="newsletter-follow">
+                        <li>
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-pinterest"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /NEWSLETTER -->
+
+<!-- FOOTER -->
+<footer id="footer">
+    <!-- top footer -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-3 col-xs-6">
+                    <div class="footer">
+                        <h3 class="footer-title">About Us</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                            incididunt ut.</p>
+                        <ul class="footer-links">
+                            <li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
+                            <li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
+                            <li><a href="#"><i class="fa fa-envelope-o"></i>email@email.com</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="footer">
+                        <h3 class="footer-title">Categories</h3>
+                        <ul class="footer-links">
+                            <li><a href="#">Hot deals</a></li>
+                            <li><a href="#">Laptops</a></li>
+                            <li><a href="#">Smartphones</a></li>
+                            <li><a href="#">Cameras</a></li>
+                            <li><a href="#">Accessories</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-xs"></div>
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="footer">
+                        <h3 class="footer-title">Information</h3>
+                        <ul class="footer-links">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Orders and Returns</a></li>
+                            <li><a href="#">Terms & Conditions</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="footer">
+                        <h3 class="footer-title">Service</h3>
+                        <ul class="footer-links">
+                            <li><a href="#">My Account</a></li>
+                            <li><a href="#">View Cart</a></li>
+                            <li><a href="#">Wishlist</a></li>
+                            <li><a href="#">Track My Order</a></li>
+                            <li><a href="#">Help</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /top footer -->
+
+    <!-- bottom footer -->
+    <div id="bottom-footer" class="section">
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <ul class="footer-payments">
+                        <li><a href="#"><i class="fa fa-cc-visa"></i></a></li>
+                        <li><a href="#"><i class="fa fa-credit-card"></i></a></li>
+                        <li><a href="#"><i class="fa fa-cc-paypal"></i></a></li>
+                        <li><a href="#"><i class="fa fa-cc-mastercard"></i></a></li>
+                        <li><a href="#"><i class="fa fa-cc-discover"></i></a></li>
+                        <li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
+                    </ul>
+                    <span class="copyright">
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            Copyright &copy;
+                            <script>document.write(new Date().getFullYear());</script> All rights reserved | This
+                            template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a
+                            href="https://colorlib.com" target="_blank">Colorlib</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </span>
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /bottom footer -->
+</footer>
+<!-- /FOOTER -->
+
+<!-- jQuery Plugins -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/slick.min.js"></script>
+<script src="/js/nouislider.min.js"></script>
+<script src="/js/jquery.zoom.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/price-formatter.js"></script>
+<!-- Price Formatting Script -->
+<script>
+    // Bắt sự kiện bấm nút xoá sản phẩm
+    $(document).on('submit', '.remove-form', function (e) {
+        e.preventDefault();
+        var form = $(this);
+        $.ajax({
+            url: '/remove',  // vẫn POST /remove
+            type: 'POST',
+            data: form.serialize(),
+            success: function (data) {
+                $('.header-ctn .dropdown').replaceWith(data); // thay bằng dữ liệu mới trả về
+            },
+            error: function () {
+                alert('Không thể xoá sản phẩm. Vui lòng thử lại!');
+            }
+        });
+    });
+
+    updateAllPrices();
+    // JavaScript để xử lý số lượng
+    document.addEventListener('DOMContentLoaded', function () {
+        const minusBtn = document.querySelector('.minus-btn');
+        const plusBtn = document.querySelector('.plus-btn');
+        const quantityInput = document.querySelector('.quantity-input');
+
+        // Xử lý nút giảm
+        minusBtn.addEventListener('click', function () {
+            let value = parseInt(quantityInput.value);
+            if (value > 1) {
+                quantityInput.value = value - 1;
+            }
+        });
+
+        // Xử lý nút tăng
+        plusBtn.addEventListener('click', function () {
+            let value = parseInt(quantityInput.value);
+            if (value < 99) {
+                quantityInput.value = value + 1;
+            }
+        });
+
+        // Xử lý input trực tiếp
+        quantityInput.addEventListener('change', function () {
+            let value = parseInt(this.value);
+            if (isNaN(value) || value < 1) {
+                this.value = 1;
+            } else if (value > 99) {
+                this.value = 99;
+            }
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        const hangSelect = document.getElementById('cate-brands');
+        const searchForm = hangSelect.closest('form');
+
+        function navigateToStore(brandId) {
+            // Thêm loading indicator nếu cần
+            console.log(`Sending request with brand:`, brandId);
+
+            // Gửi POST request đến /store với dữ liệu JSON
+            fetch('/store', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    brands: [parseInt(brandId)],
+                    rams: [],
+                    storages: []
+                })
+            })
+                .then(response => {
+                    // Kiểm tra response status trước
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    // Kiểm tra content-type
+                    const contentType = response.headers.get("content-type");
+                    if (!contentType || !contentType.includes("application/json")) {
+                        throw new Error("Received non-JSON response from server");
+                    }
+
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(`Received response:`, data);
+
+                    if (data.success) {
+                        // Chuyển hướng đến trang store
+                        window.location.href = data.redirect || '/store';
+                    } else {
+                        throw new Error(data.error || 'Unknown error occurred');
+                    }
+                })
+                .catch(error => {
+                    console.error(`Navigation error:`, error);
+                    alert('Có lỗi xảy ra khi chuyển trang. Vui lòng thử lại sau.');
+                });
+        }
+
+        // Xử lý submit form
+        searchForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const selectedBrand = hangSelect.value;
+            if (selectedBrand) {
+                console.log(`Form submitted with brand:`, selectedBrand);
+                navigateToStore(selectedBrand);
+            }
+        });
+
+        // Xử lý thay đổi select box
+        hangSelect.addEventListener('change', function () {
+            const selectedBrand = this.value;
+            if (selectedBrand) {
+                console.log(`Select changed to:`, selectedBrand);
+                // Tự động submit form khi người dùng chọn
+                searchForm.dispatchEvent(new Event('submit'));
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.querySelector('.search-product');
+        const searchButton = document.querySelector('.search-product-btn');
+
+        // Hàm xử lý tìm kiếm và chuyển trang
+        function handleSearch(e) {
+            if (e) {
+                e.preventDefault();
+            }
+
+            const keyword = searchInput.value.trim();
+
+            if (keyword) {
+                // Tạo đối tượng chứa dữ liệu tìm kiếm
+                const searchData = {
+                    keyword: keyword
+                };
+
+                // Chuyển đối tượng thành chuỗi và mã hóa để truyền qua URL
+                const encodedData = encodeURIComponent(JSON.stringify(searchData));
+
+                // Chuyển đến trang store với dữ liệu tìm kiếm
+                window.location.href = `/store?search=${encodedData}`;
+            }
+        }
+
+        // Xử lý sự kiện click search button
+        if (searchButton) {
+            searchButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                handleSearch(e);
+            });
+        }
+
+        // Xử lý sự kiện enter trong input
+        if (searchInput) {
+            searchInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSearch(e);
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+
+</html>

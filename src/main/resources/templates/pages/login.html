@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Material Design for Bootstrap</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="/imgs/logo.png" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" />
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    <!-- MDB -->
+    <link rel="stylesheet" href="/css/bootstrap-login-form.min.css" />
+    <link rel="stylesheet" href="/css/login.css" />
+</head>
+
+<body>
+<section class="h-100 gradient-form" style="background-color: #eee;">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-xl-10">
+                <div class="card rounded-3 text-black">
+                    <div class="row g-0">
+                        <div class="form-container col-lg-6">
+                            <div class="forms-wrapper">
+                                <div class="login">
+                                    <div class="card-body p-md-5 mx-md-4">
+
+                                        <div class="text-center">
+                                            <img src="/imgs/logo.png" style="width: 150px;" alt="logo">
+                                            <h4 class="mt-1 mb-5 pb-1">Đăng Nhập</h4>
+                                        </div>
+
+                                        <form th:action="@{/login}" method="post">
+                                            <div class="form-outline mb-4">
+                                                <input type="email" id="email-login" name="email"
+                                                       class="form-control" required />
+                                                <label class="form-label" for="email-login">Email*</label>
+                                            </div>
+
+                                            <div class="form-outline mb-4">
+                                                <input type="password" id="pass-login" name="password"
+                                                       class="form-control" required />
+                                                <label class="form-label" for="pass-login">Mật khẩu*</label>
+                                                <button type="button" class="toggle-password"
+                                                        onclick="togglePassword()" tabindex="-1"
+                                                        aria-label="Hiển thị mật khẩu">
+                                                    <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="20"
+                                                         height="20" fill="#6c757d" viewBox="0 0 24 24">
+                                                        <path
+                                                                d="M12 4.5C7.305 4.5 3.14 7.358 1.5 12c1.64 4.642 5.805 7.5 10.5 7.5s8.86-2.858 10.5-7.5C20.86 7.358 16.695 4.5 12 4.5zm0 12c-2.486 0-4.5-2.014-4.5-4.5S9.514 7.5 12 7.5s4.5 2.014 4.5 4.5-2.014 4.5-4.5 4.5zm0-7.5a3 3 0 100 6 3 3 0 000-6z" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+
+                                            <div class="text-center pt-1 mb-0 pb-1">
+                                                <button
+                                                        class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-0"
+                                                        type="submit">Đăng Nhập</button>
+                                            </div>
+                                            <div class="divider-container">
+                                                <div class="divider-line"></div>
+                                                <span class="divider-text">Hoặc</span>
+                                                <div class="divider-line"></div>
+                                            </div>
+                                            <div class="text-center pt-1 mb-5 pb-1">
+                                                <a href="/oauth2/authorization/google"
+                                                   class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3 d-flex align-items-center justify-content-center gap-2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                         viewBox="0 0 48 48">
+                                                        <path fill="#FFC107"
+                                                              d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12	s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20	s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
+                                                        <path fill="#FF3D00"
+                                                              d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039	l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
+                                                        <path fill="#4CAF50"
+                                                              d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36	c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" />
+                                                        <path fill="#1976D2"
+                                                              d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571	c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
+                                                    </svg>
+                                                    Đăng nhập bằng Google
+                                                </a>
+                                                <p class="text-danger text-center mb-2"
+                                                   th:if="${session.login_error}" th:text="${session.login_error}">
+                                                </p>
+                                                <a class="text-muted" href="#!">Quên mật khẩu ?</a>
+                                            </div>
+                                            <div class="d-flex align-items-center justify-content-center pb-4">
+                                                <p class="mb-0 me-2">Chưa có tài khoản ?</p>
+                                                <button type="button" class="btn btn-outline-primary register-now">
+                                                    <span>Tạo tài khoản</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="register">
+                                    <div class="card-body p-md-5 mx-md-4">
+
+                                        <div class="text-center">
+                                            <img src="/imgs/logo.png" style="width: 150px;" alt="logo">
+                                            <h4 class="mt-1 mb-5 pb-1">Đăng Ký</h4>
+                                        </div>
+
+                                        <form th:action="@{/register}" method="post">
+
+                                            <div class="form-outline mb-4">
+                                                <input type="email" id="email" name="email" class="form-control"
+                                                       required />
+                                                <label class="form-label" for="email">Email*</label>
+                                            </div>
+
+                                            <div class="form-outline mb-4">
+                                                <input type="password" id="matkhau" name="matkhau"
+                                                       class="form-control" required />
+                                                <label class="form-label" for="matkhau">Mật khẩu*</label>
+                                            </div>
+
+                                            <div class="form-outline mb-4">
+                                                <input type="text" id="tenkh" name="tenkh" class="form-control"
+                                                       required />
+                                                <label class="form-label" for="tenkh">Tên khách hàng*</label>
+                                            </div>
+
+                                            <div class="form-outline mb-4">
+                                                <input type="text" id="diachi" name="diachi" class="form-control"
+                                                       required />
+                                                <label class="form-label" for="diachi">Địa chỉ*</label>
+                                            </div>
+
+                                            <div class="form-outline mb-4">
+                                                <input type="tel" id="sdt" name="sdt" class="form-control"
+                                                       maxlength="10" required />
+                                                <label class="form-label" for="sdt">Số điện thoại*</label>
+                                            </div>
+                                            <p class="text-danger text-center mb-2" th:if="${register_error}"
+                                               th:text="${register_error}"></p>
+                                            <div class="text-center pt-1 mb-5 pb-1">
+                                                <button
+                                                        class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
+                                                        type="submit">Đăng Ký</button>
+                                            </div>
+
+                                            <div class="d-flex align-items-center justify-content-center pb-4">
+                                                <p class="mb-0 me-2">Đã có tài khoản ?</p>
+                                                <button type="button" class="btn btn-outline-primary login-now">
+                                                    <span>Đăng nhập ngay</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+                            <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                                <h4 class="mb-4">Chúng tôi còn hơn cả công ty</h4>
+                                <p class="small mb-0">Chỉ cần bạn có tiền thế giới sẽ phục vụ bạn.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End your project here-->
+
+<!-- MDB -->
+<script type="text/javascript" src="/js/mdb.min.js"></script>
+<!-- Custom scripts -->
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        const createNewBtn = document.querySelector('.register-now');
+        const loginNowBtn = document.querySelector('.login-now');
+        const rightCol = document.querySelector('.gradient-custom-2');
+        const formsWrapper = document.querySelector('.forms-wrapper');
+        const loginForm = document.querySelector('.login');
+        const registerForm = document.querySelector('.register');
+
+        createNewBtn.addEventListener("click", function () {
+            formsWrapper.classList.add('slide-left');
+
+            rightCol.classList.add('slide-to-left');
+
+            setTimeout(() => {
+                loginForm.style.opacity = "0";
+                registerForm.style.opacity = "1";
+                rightCol.classList.remove('slide-to-left');
+            }, 300);
+        });
+
+        loginNowBtn.addEventListener("click", function () {
+            formsWrapper.classList.remove('slide-left');
+
+            rightCol.classList.add('slide-to-right');
+
+            setTimeout(() => {
+                registerForm.style.opacity = "0";
+                loginForm.style.opacity = "1";
+                rightCol.classList.remove('slide-to-right');
+            }, 300);
+        });
+    });
+
+    function togglePassword() {
+        const pwd = document.getElementById("pass-login");
+        const icon = document.getElementById("eyeIcon");
+        if (pwd.type === "password") {
+            pwd.type = "text";
+            icon.innerHTML = '<path d="M12 4.5C7.305 4.5 3.14 7.358 1.5 12c1.64 4.642 5.805 7.5 10.5 7.5s8.86-2.858 10.5-7.5C20.86 7.358 16.695 4.5 12 4.5zm0 12a5.986 5.986 0 01-4.242-1.757l8.485-8.485A5.986 5.986 0 0112 16.5zm0-9a3 3 0 100 6 3 3 0 000-6z"/>';
+        } else {
+            pwd.type = "password";
+            icon.innerHTML = '<path d="M12 4.5C7.305 4.5 3.14 7.358 1.5 12c1.64 4.642 5.805 7.5 10.5 7.5s8.86-2.858 10.5-7.5C20.86 7.358 16.695 4.5 12 4.5zm0 12c-2.486 0-4.5-2.014-4.5-4.5S9.514 7.5 12 7.5s4.5 2.014 4.5 4.5-2.014 4.5-4.5 4.5zm0-7.5a3 3 0 100 6 3 3 0 000-6z"/>';
+        }
+    }
+
+    // Lấy element input số điện thoại
+    const phoneInput = document.getElementById('sdt');
+
+    // Thêm event listener cho sự kiện input
+    phoneInput.addEventListener('input', function (e) {
+        // Xóa tất cả ký tự không phải số
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    // Thêm event listener cho sự kiện keypress
+    phoneInput.addEventListener('keypress', function (e) {
+        // Chỉ cho phép nhập số
+        if (!/[0-9]/.test(e.key)) {
+            e.preventDefault();
+        }
+    });
+
+    // Xử lý sự kiện paste
+    phoneInput.addEventListener('paste', function (e) {
+        e.preventDefault();
+        // Lấy text được paste
+        const pastedText = (e.originalEvent || e).clipboardData.getData('text/plain');
+        // Chỉ giữ lại số
+        this.value = pastedText.replace(/[^0-9]/g, '');
+    });
+
+</script>
+</body>
+
+</html>

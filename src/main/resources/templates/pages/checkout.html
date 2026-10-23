@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>Electro - HTML Ecommerce Template</title>
+
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" />
+
+    <!-- Slick -->
+    <link type="text/css" rel="stylesheet" href="/css/slick.css" />
+    <link type="text/css" rel="stylesheet" href="/css/slick-theme.css" />
+
+    <!-- nouislider -->
+    <link type="text/css" rel="stylesheet" href="/css/nouislider.min.css" />
+
+    <!-- Thay thế link CSS cũ bằng CDN của Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Custom stlylesheet -->
+    <link type="text/css" rel="stylesheet" href="/css/main.css" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+<!-- HEADER -->
+<header>
+    <!-- TOP HEADER -->
+    <div id="top-header">
+        <div class="container">
+            <ul class="header-links pull-left">
+                <li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>
+                <li><a href="#"><i class="fa fa-envelope-o"></i> email@email.com</a></li>
+                <li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
+            </ul>
+
+            <!-- Hiển thị theo điều kiện đăng nhập -->
+            <th:block th:if="${session.name == null}">
+                <ul class="header-links pull-right">
+                    <li>
+                        <a href="/login">
+                            <i class="fa fa-user-o"></i>
+                            <span>Đăng Nhập</span>
+                        </a>
+                    </li>
+                </ul>
+            </th:block>
+
+            <th:block th:if="${session.name != null}">
+                <ul style="display: flex; justify-content: center; align-items: center;"
+                    class="header-links pull-right">
+                    <li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            <img th:src="${session.picture != null ? session.picture : '/imgs/account-logo.png'}"
+                                 class="img-circle user-avatar"
+                                 th:alt="${session.name != null ? session.name : 'Avatar'}" height="22">
+                            <span th:text="${session.name}" class="user-name"></span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu custom-dropdown-menu">
+                            <li><a href="#"><i class="fa fa-user"></i> My Profile</a></li>
+                            <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
+                            <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </th:block>
+        </div>
+    </div>
+    <!-- /TOP HEADER -->
+
+    <!-- MAIN HEADER -->
+    <div id="header" class="gradient-custom-2">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <!-- LOGO -->
+                <div class="col-md-3">
+                    <div class="header-logo">
+                        <a th:href="@{/home}" class="logo">
+                            <img src="./imgs/logo.png" alt="" style="width: 75px;">
+                        </a>
+                    </div>
+                </div>
+                <!-- /LOGO -->
+
+                <!-- SEARCH BAR -->
+                <div class="col-md-6">
+                    <div class="header-search">
+                        <form>
+                            <select class="input-select" name="hang" id="cate-brands">
+                                <option value="">Danh Mục</option>
+                                <option th:each="hang : ${hangList}" th:value="${hang.mahang}"
+                                        th:text="${hang.tenhang}" th:id="'brand-' + ${hang.mahang}">
+                                </option>
+                            </select>
+                            <input class="input search-product" placeholder="Tìm kiếm">
+                            <button class="search-btn fa fa-search search-product-btn"></button>
+                        </form>
+                    </div>
+                </div>
+                <!-- /SEARCH BAR -->
+
+                <!-- ACCOUNT -->
+                <div class="col-md-3 clearfix">
+                    <div class="header-ctn">
+                        <!-- Cart -->
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span>Giỏ hàng</span>
+                                <!-- Hiển thị số lượng sản phẩm trong giỏ hàng -->
+                                <div class="qty" th:text="${chitietgiohang != null ? chitietgiohang.size() : 0}">
+                                </div>
+                            </a>
+                            <div class="cart-dropdown">
+                                <div class="cart-list">
+                                    <!-- Nếu có sản phẩm trong giỏ hàng -->
+                                    <div th:if="${chitietgiohang != null and !chitietgiohang.isEmpty()}">
+                                        <div class="product-widget" th:each="item : ${chitietgiohang}">
+                                            <div class="product-img">
+                                                <img th:src="@{/imgs/} + ${item.sanPham.hinhanh}"
+                                                     alt="Ảnh sản phẩm">
+                                            </div>
+                                            <div class="product-body">
+                                                <h3 class="product-name">
+                                                    <a th:href="@{'/product/' + ${item.sanPham.masp}}"
+                                                       th:text="${item.sanPham.tensp}">Tên sản phẩm</a>
+                                                </h3>
+                                                <h4 class="product-price">
+                                                    <span class="qty" th:text="${item.soluong} + 'x'"></span>
+                                                    <span
+                                                            th:text="${#numbers.formatDecimal(item.dongia, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                                                </h4>
+                                            </div>
+                                            <form action="/remove" method="post" class="remove-form"
+                                                  style="display: inline;">
+                                                <input type="hidden" name="masp" th:value="${item.sanPham.masp}" />
+                                                <button type="submit" class="delete"><i
+                                                        class="fa fa-close"></i></button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <!-- Nếu giỏ hàng không có sản phẩm -->
+                                    <p th:if="${chitietgiohang == null or chitietgiohang.isEmpty()}">Giỏ hàng của
+                                        bạn không có sản phẩm nào.</p>
+                                </div>
+                                <div class="cart-summary">
+                                    <small
+                                            th:text="${chitietgiohang != null ? chitietgiohang.size() : 0} + ' sản phẩm'"></small>
+                                    <h5
+                                            th:text="'Tổng cộng: ' + ${#numbers.formatDecimal(subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                    </h5>
+                                </div>
+                                <div class="cart-btns">
+                                    <a href="/order">Xem đơn hàng</a>
+                                    <a href="/checkout">Thanh toán <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Cart -->
+
+                        <!-- Menu Toogle -->
+                        <div class="menu-toggle">
+                            <a href="#">
+                                <i class="fa fa-bars"></i>
+                                <span>Menu</span>
+                            </a>
+                        </div>
+                        <!-- /Menu Toogle -->
+                    </div>
+                </div>
+                <!-- /ACCOUNT -->
+            </div>
+            <!-- row -->
+        </div>
+        <!-- container -->
+    </div>
+    <!-- /MAIN HEADER -->
+</header>
+<!-- /HEADER -->
+
+<!-- NAVIGATION -->
+<nav id="navigation">
+    <!-- container -->
+    <div class="container">
+        <!-- responsive-nav -->
+        <div id="responsive-nav">
+            <!-- NAV -->
+            <ul class="main-nav nav navbar-nav">
+                <li class="active"><a th:href="@{/home}">Trang Chủ</a></li>
+                <li><a th:href="@{/home}">Khuyến Mãi</a></li>
+                <li><a th:href="@{/store}">Điện Thoại</a></li>
+            </ul>
+            <!-- /NAV -->
+        </div>
+        <!-- /responsive-nav -->
+    </div>
+    <!-- /container -->
+</nav>
+<!-- /NAVIGATION -->
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb-tree">
+                    <li><a th:href="@{/home}">Trang Chủ</a></li>
+                    <li class="active">Thanh Toán</li>
+                </ul>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /BREADCRUMB -->
+
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+
+        <div class="row">
+
+            <div class="col-md-7">
+                <!-- Danh sách sản phẩm trong giỏ hàng -->
+                <div class="cart-products">
+                    <h3 class="title">GIỎ HÀNG</h3>
+                    <div th:each="item : ${chitietgiohang}" class="checkout-cart-item" style="display: flex; margin-bottom: 15px;">
+                        <div class="product-img" style="width: 80px; margin-right: 15px;">
+                            <img th:src="@{/imgs/} + ${item.sanPham.hinhanh}" alt="" style="width: 100%;">
+                        </div>
+                        <div class="product-info" style="flex: 1;">
+                            <h4 th:text="${item.sanPham.tensp}"></h4>
+                            <p th:text="'Đơn giá: ' + ${#numbers.formatDecimal(item.dongia, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
+                            <div class="quantity-control">
+                                <form th:action="@{/update-quantity}" method="post" style="display: inline-flex;">
+                                    <input type="hidden" name="masp" th:value="${item.sanPham.masp}" />
+                                    <button type="submit" name="action" value="decrease">-</button>
+                                    <input type="text" name="soluong" th:value="${item.soluong}" style="width: 40px; text-align: center;" readonly>
+                                    <button type="submit" name="action" value="increase">+</button>
+                                </form>
+                                <form th:action="@{/remove-from-checkout}" method="post" style="display: inline;">
+                                    <input type="hidden" name="masp" th:value="${item.sanPham.masp}" />
+                                    <button type="submit" class="delete">Xoá</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="product-subtotal" style="text-align: right;">
+                            <strong th:text="${#numbers.formatDecimal(item.getThanhtien(), 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Details -->
+            <form method="post" action="/checkout/place-order">
+            <div class="col-md-5 order-details">
+                <div class="section-title text-center">
+                    <h3 class="title">Đơn Hàng</h3>
+                </div>
+                <div class="order-summary">
+                    <div class="order-col">
+                        <div><strong>SẢN PHẨM</strong></div>
+                        <div><strong>TỔNG</strong></div>
+                    </div>
+                    <div class="order-products" th:each="item : ${chitietgiohang}">
+                        <div class="order-col">
+                            <div th:text="${item.soluong} + 'x'">1x</div>
+                            <div th:text="${item.sanPham.tensp}">Product Name Goes Here</div>
+                            <div th:text="${#numbers.formatDecimal(item.getThanhtien(), 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                                $980.00</div>
+                        </div>
+                    </div>
+                    <div class="order-col">
+                        <div>Ship COD</div>
+                        <div><strong>Miễn phí</strong></div>
+                    </div>
+                    <div class="order-col">
+                        <div><strong>TỔNG</strong></div>
+                        <div><strong class="order-total"
+                                     th:text="${#numbers.formatDecimal(subtotal, 0, 'COMMA', 0, 'POINT')} + 'đ'">$2940.00</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payment-method">
+                    <div class="input-radio">
+                        <input type="radio" name="payment" id="payment-1">
+                        <label for="payment-1">
+                            <span></span>
+                            Ship COD
+                        </label>
+                    </div>
+                </div>
+                <!-- Billing Details -->
+                <div class="billing-details">
+                    <div style="padding-bottom: 10px;"><strong>Địa chỉ và số điện thoại giao hàng</strong></div>
+                    <div class="form-group">
+                        <input class="input" type="text" name="address" required placeholder="Address" th:value="${session.locale != null ? session.locale : ''}">
+                        <p name="address_Error"></p>
+                    </div>
+                    <div class="form-group">
+                        <input class="input" type="tel" name="tel" required placeholder="Telephone" th:value="${session.phone_number != null ? session.phone_number : ''}">
+                        <p name="tel_Error"></p>
+                    </div>
+                </div>
+                <!-- /Billing Details -->
+                <button type="submit" class="primary-btn order-submit">
+                    Đặt hàng
+                </button>
+            </div>
+            </form>
+            <!-- /Order Details -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+
+<!-- NEWSLETTER -->
+<div id="newsletter" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="newsletter">
+                    <p>Sign Up for the <strong>NEWSLETTER</strong></p>
+                    <form>
+                        <input class="input" type="email" placeholder="Enter Your Email">
+                        <button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
+                    </form>
+                    <ul class="newsletter-follow">
+                        <li>
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-pinterest"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /NEWSLETTER -->
+
+<!-- FOOTER -->
+<footer id="footer">
+    <!-- top footer -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-3 col-xs-6">
+                    <div class="footer">
+                        <h3 class="footer-title">About Us</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                            incididunt ut.</p>
+                        <ul class="footer-links">
+                            <li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
+                            <li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
+                            <li><a href="#"><i class="fa fa-envelope-o"></i>email@email.com</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="footer">
+                        <h3 class="footer-title">Categories</h3>
+                        <ul class="footer-links">
+                            <li><a href="#">Hot deals</a></li>
+                            <li><a href="#">Laptops</a></li>
+                            <li><a href="#">Smartphones</a></li>
+                            <li><a href="#">Cameras</a></li>
+                            <li><a href="#">Accessories</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-xs"></div>
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="footer">
+                        <h3 class="footer-title">Information</h3>
+                        <ul class="footer-links">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Orders and Returns</a></li>
+                            <li><a href="#">Terms & Conditions</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="footer">
+                        <h3 class="footer-title">Service</h3>
+                        <ul class="footer-links">
+                            <li><a href="#">My Account</a></li>
+                            <li><a href="#">View Cart</a></li>
+                            <li><a href="#">Wishlist</a></li>
+                            <li><a href="#">Track My Order</a></li>
+                            <li><a href="#">Help</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /top footer -->
+
+    <!-- bottom footer -->
+    <div id="bottom-footer" class="section">
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <ul class="footer-payments">
+                        <li><a href="#"><i class="fa fa-cc-visa"></i></a></li>
+                        <li><a href="#"><i class="fa fa-credit-card"></i></a></li>
+                        <li><a href="#"><i class="fa fa-cc-paypal"></i></a></li>
+                        <li><a href="#"><i class="fa fa-cc-mastercard"></i></a></li>
+                        <li><a href="#"><i class="fa fa-cc-discover"></i></a></li>
+                        <li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
+                    </ul>
+                    <span class="copyright">
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            Copyright &copy;
+                            <script>document.write(new Date().getFullYear());</script> All rights reserved | This
+                            template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a
+                            href="https://colorlib.com" target="_blank">Colorlib</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </span>
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /bottom footer -->
+</footer>
+<!-- /FOOTER -->
+
+<!-- jQuery Plugins -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/slick.min.js"></script>
+<script src="/js/nouislider.min.js"></script>
+<script src="/js/jquery.zoom.min.js"></script>
+<script src="/js/main.js"></script>
+<script>
+    function validatePhoneNumber(phone) {
+        if (!/^\d+$/.test(phone)) {
+            return "Số điện thoại chỉ được chứa chữ số!";
+        }
+        if (phone.length > 11) {
+            return "Số điện thoại tối đa 11 số!";
+        }
+        if (phone.length < 10) {
+            return "Số điện thoại phải có ít nhất 10 số!";
+        }
+
+        const validPrefixes = ["03", "05", "07", "08", "09"];
+        const hasValidPrefix = validPrefixes.some(prefix => phone.startsWith(prefix));
+
+        if (!hasValidPrefix) {
+            return "Số điện thoại không hợp lệ! Phải bắt đầu bằng 03, 05, 07, 08 hoặc 09";
+        }
+
+        return ""; // hợp lệ
+    }
+
+    function validateCheckoutForm(event) {
+        const addressInput = document.querySelector('input[name="address"]');
+        const telInput = document.querySelector('input[name="tel"]');
+        const addressError = document.querySelector('p[name="address_Error"]');
+        const telError = document.querySelector('p[name="tel_Error"]');
+
+        // Xóa lỗi cũ
+        addressError.textContent = "";
+        telError.textContent = "";
+
+        let isValid = true;
+
+        // Kiểm tra địa chỉ
+        if (!addressInput.value.trim()) {
+            addressError.textContent = "Vui lòng nhập địa chỉ.";
+            addressError.style.color = "red";
+            isValid = false;
+        }
+
+        // Kiểm tra số điện thoại
+        const phoneError = validatePhoneNumber(telInput.value.trim());
+        if (phoneError) {
+            telError.textContent = phoneError;
+            telError.style.color = "red";
+            isValid = false;
+        }
+
+        if (!isValid) {
+            event.preventDefault(); // chặn gửi form
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector('form[action="/checkout/place-order"]');
+        if (form) {
+            form.addEventListener("submit", validateCheckoutForm);
+        }
+    });
+</script>
+
+</body>
+
+</html>
